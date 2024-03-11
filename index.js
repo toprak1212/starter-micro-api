@@ -1,15 +1,21 @@
-var http = require("http");
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-var xip = "";
-http.get({ host: "api.ipify.org", port: 80, path: "/" }, function (resp) {
-  resp.on("data", function (ip) {
-    xip = ip;
-  });
+const WebSocket = require("ws");
+var Centrifuge = require("centrifuge");
+var wss_url = "wss://ws3.indodax.com/ws/";
+var token =  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE5NDY2MTg0MTV9.UR1lBM6Eqh0yWz-PVirw1uPCxe60FdchR8eNVdsskeo";
+
+var centrifuge = new Centrifuge(wss_url, {
+  debug: true,
+  websocket: WebSocket,
 });
-http
-  .createServer(function (req, res) {
-    console.log(`Just got a request at ${req.url}!`);
-    res.write(xip);
-    res.end();
-  })
-  .listen(process.env.PORT || 3000);
+centrifuge.setToken(token);
+
+const jsdom = require("jsdom");
+const dom = new jsdom.JSDOM("");
+const $ = require("jquery")(dom.window);
+
+centrifuge.subscribe("chart:tick-dntidr", function (message) {
+  console.log(message);
+});
+centrifuge.connect();
