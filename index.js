@@ -9,7 +9,7 @@ http.get({ host: "api.ipify.org", port: 80, path: "/" }, function (resp) {
 http
   .createServer(function (req, res) {
     console.log(`Just got a request at ${req.url}!`);
-    res.write(ip);
+    res.write(xip);
     res.end();
   })
   .listen(process.env.PORT || 3000);
