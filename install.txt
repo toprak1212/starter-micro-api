@@ -1,0 +1,4 @@
+Install
+
+npm init -y
+npm install centrifuge@^2.8.5 ws fs path jsdom jquery
